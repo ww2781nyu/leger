@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>两清</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700;900&display=swap">
+<style>
+/* 两清：暖白纸面、深松绿主色、米色提示条；单栏布局 */
+:root{
+  --bg:#F6F6F2; --surface:#FFFFFF; --ink:#22302A; --muted:#7D8781; --line:#E6E8E2;
+  --accent:#3B6B58; --accent-ink:#FFFFFF; --accent-soft:#EDF2EC;
+  --hero:#3B6B58; --hero-ink:#FFFFFF; --hero-soft:rgba(255,255,255,.72); --hero-mint:#A9D3BC;
+  --sand:#F3F2E7; --sand-line:#E8E5D3; --sand-ink:#8C7B4C;
+  --lilac:#ECE6F1; --lilac-ink:#6F5F82;
+  --warn:#A8651F; --warn-soft:#F6ECDD; --bad:#AE3B3B; --bad-soft:#F6E3E1;
+  --f-body:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --f-num:"Outfit","Noto Sans SC",system-ui,sans-serif;
+  --r:20px; --r-sm:12px; color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#131816; --surface:#1B2220; --ink:#E7ECE8; --muted:#97A29B; --line:#2B3430;
+  --accent:#6FB394; --accent-ink:#0E1A14; --accent-soft:#1F2F28;
+  --hero:#2F5A49; --hero-ink:#F2F7F3; --hero-soft:rgba(242,247,243,.7); --hero-mint:#9ACBB0;
+  --sand:#24231C; --sand-line:#36342A; --sand-ink:#CDBB8A;
+  --lilac:#2C2735; --lilac-ink:#C3B4D6;
+  --warn:#E2A466; --warn-soft:#382A1B; --bad:#E68C86; --bad-soft:#3A2220; color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-top:calc(22px + env(safe-area-inset-top,0px));padding-bottom:calc(56px + env(safe-area-inset-bottom,0px))}
+[hidden]{display:none!important}
+svg.ic{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.wrap .wrap{width:100%;max-width:none;margin:0}
+
+/* brand */
+.brand{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:12px;color:var(--ink);text-decoration:none}
+.mark{width:46px;height:46px;border-radius:14px;background:var(--hero);color:var(--hero-ink);display:grid;place-items:center;flex:none}
+.mark svg.ic{width:26px;height:26px;stroke-width:1.7}
+.wm{display:flex;flex-direction:column;line-height:1.1;gap:5px}
+.wm b{font-size:24px;font-weight:900;letter-spacing:.12em}
+.wm small{font-family:var(--f-num);font-size:10px;letter-spacing:.32em;color:var(--muted)}
+.head-r{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.head-r small{color:var(--muted);font-size:13px;display:flex;gap:8px;align-items:baseline}
+.tagline{margin:-8px 0 0;color:var(--muted);font-size:13px;letter-spacing:.04em}
+.intro{display:flex;flex-direction:column;gap:6px;padding-top:6px}
+.eyebrow{font-family:var(--f-num);font-size:11px;letter-spacing:.24em;color:var(--muted)}
+.intro h2{margin:0;font-size:clamp(26px,7vw,32px);font-weight:900;letter-spacing:.02em;text-wrap:balance}
+.intro h2 span{color:var(--accent)}
+.intro p{margin:0;color:var(--muted);font-size:15px}
+
+.link{background:none;border:0;padding:0;color:var(--accent);font:inherit;font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:var(--r-sm);padding:7px 14px;font-size:13px;font-weight:500}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.big{padding:11px 20px;font-size:15px;font-weight:700}
+.btn.ghost{padding:9px 16px;font-size:14px;font-weight:700}
+.btn.danger{color:var(--bad)}
+.btn.armed{background:var(--bad);color:#fff;border-color:var(--bad)}
+.btn:disabled{opacity:.5;cursor:default}
+.notice{border-radius:var(--r-sm);padding:12px 14px;font-size:14px;background:var(--warn-soft)}
+.notice b{color:var(--warn)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:14px}
+.card h2{margin:0;font-size:18px;font-weight:700;text-wrap:balance}
+.card p{margin:0;color:var(--muted);font-size:14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field label,.lbl{font-size:12px;letter-spacing:.06em;color:var(--muted)}
+input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-width:0}
+input.pin{font-family:var(--f-num);letter-spacing:.3em}
+#f-amount{font-family:var(--f-num);font-size:22px;font-weight:600}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;border-radius:9px;padding:8px 6px;font-size:14px;overflow-wrap:anywhere}
+.seg button[aria-pressed="true"]{background:var(--surface);font-weight:700;color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.preview{font-size:13px;color:var(--muted);background:var(--accent-soft);border-radius:10px;padding:10px 12px}
+.preview b{color:var(--ink)}
+.actions{display:flex;justify-content:flex-end;gap:10px;align-items:center;flex-wrap:wrap}
+.err{color:var(--bad);font-size:13px}
+.copybox{display:flex;gap:8px;align-items:center}
+.copybox input{font-family:var(--f-num);font-size:12px}
+.people{display:flex;flex-direction:column;gap:8px}
+.person{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.person b{overflow-wrap:anywhere}
+.recent{display:flex;flex-direction:column}
+.recent a{display:flex;justify-content:space-between;gap:10px;padding:10px 2px;border-top:1px solid var(--line);color:var(--ink);text-decoration:none}
+.recent a:first-child{border-top:0}
+.recent a span{color:var(--muted);font-size:13px}
+
+/* balance hero */
+.bal{position:relative;overflow:hidden;background:var(--hero);color:var(--hero-ink);border-radius:var(--r);padding:24px 22px 18px;display:flex;flex-direction:column;gap:10px;isolation:isolate}
+.bal-head{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700}
+.bal-line{font-size:14px;color:var(--hero-soft);display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.bal-line .who{color:var(--hero-ink);font-weight:700}
+.bal-amt{display:flex;align-items:baseline;gap:10px;font-family:var(--f-num);font-variant-numeric:tabular-nums;line-height:1}
+.bal-amt .cur{font-size:clamp(26px,7vw,34px);color:var(--hero-mint);font-weight:500}
+.bal-amt .n{font-size:clamp(44px,13vw,64px);font-weight:500;letter-spacing:-.02em}
+.bal-amt .code{font-size:13px;color:var(--hero-soft);letter-spacing:.06em}
+.bal-count{font-size:12px;color:var(--hero-soft)}
+.bal-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--hero-soft);border-top:1px solid rgba(255,255,255,.14);padding-top:14px;margin-top:6px}
+.bal-meta span{display:flex;align-items:center;gap:8px}
+.bal-meta svg.ic{width:17px;height:17px}
+.on-hero{display:inline-flex;align-items:center;gap:6px;background:none;border:0;color:var(--hero-ink);font-weight:700;font-size:14px;padding:4px 0}
+.on-hero svg.ic{width:17px;height:17px}
+.deco{position:absolute;right:-28px;top:54px;width:210px;height:190px;z-index:-1;opacity:.16;pointer-events:none}
+.deco rect{fill:none;stroke:var(--hero-ink);stroke-width:1.2}
+.deco path{fill:none;stroke:var(--hero-ink);stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+
+/* sand banner */
+.rule{display:flex;align-items:center;gap:14px;background:var(--sand);border:1px solid var(--sand-line);border-radius:16px;padding:16px 18px;color:var(--sand-ink)}
+.rule svg.ic{width:24px;height:24px}
+.rule div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.rule b{color:var(--ink);font-size:15px}
+.rule span{font-size:13px}
+
+/* promise card */
+.promise{background:var(--accent-soft);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:12px}
+.promise>svg.ic{width:30px;height:30px;color:var(--accent);stroke-width:1.6}
+.promise h3{margin:4px 0 0;font-size:18px;font-weight:900}
+.promise p{margin:0;color:var(--muted);font-size:14px;line-height:1.9}
+.pair{display:flex;align-items:center;gap:10px;margin-top:6px;color:var(--muted);font-size:13px}
+.avs{display:flex}
+.av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:14px;border:2px solid var(--surface)}
+.av.me{background:var(--accent-soft);color:var(--accent);filter:brightness(.97)}
+.av.you{background:var(--lilac);color:var(--lilac-ink);margin-left:-8px}
+.pair svg.ic{width:18px;height:18px}
+
+/* ledger */
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:13px}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tab .ct{font-family:var(--f-num);margin-left:5px}
+.tab .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--warn);margin-left:5px;vertical-align:1px}
+.list{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.month{font-size:12px;letter-spacing:.08em;color:var(--muted);padding:10px 18px 6px;background:var(--bg);border-top:1px solid var(--line)}
+.month:first-child{border-top:0}
+.month span{float:right;font-family:var(--f-num)}
+.item{padding:14px 18px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:7px}
+.item:first-child,.month+.item{border-top:0}
+.i-top{display:flex;gap:12px;align-items:baseline}
+.i-date{font-family:var(--f-num);font-size:13px;color:var(--muted);flex:none;width:42px}
+.i-note{font-weight:500;flex:1;min-width:0;overflow-wrap:anywhere}
+.i-amt{font-family:var(--f-num);font-variant-numeric:tabular-nums;font-weight:600;font-size:16px;flex:none}
+.item.dead .i-note,.item.dead .i-amt{text-decoration:line-through;color:var(--muted)}
+.i-sub,.i-act{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding-left:54px;font-size:13px;color:var(--muted)}
+.i-act .hint{color:var(--warn)}
+.i-edit{display:flex;flex-direction:column;gap:2px;margin-left:54px;background:var(--warn-soft);border-radius:10px;padding:8px 12px;font-size:13px}
+.i-edit b{color:var(--warn);font-weight:500}
+@media (max-width:420px){.i-edit{margin-left:0}}
+.chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:1px 9px;font-size:12px;border:1px solid var(--line)}
+.chip.yes{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+.chip.wait{background:var(--warn-soft);border-color:transparent;color:var(--warn)}
+.chip.no{background:var(--bad-soft);border-color:transparent;color:var(--bad)}
+.chip.void{color:var(--muted)}
+.empty{padding:30px 18px;text-align:center;color:var(--muted);font-size:14px}
+.foot{display:flex;flex-direction:column;gap:10px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+.foot .r{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.foot select{width:auto;padding:5px 9px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:14px;max-width:calc(100% - 32px);z-index:20}
+@media (max-width:420px){.i-sub,.i-act{padding-left:0}.deco{opacity:.1}}
+@media (prefers-reduced-motion:no-preference){.btn,.tab,.seg button{transition:background .15s,border-color .15s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand">
+    <a class="logo" href="./" aria-label="两清 首页"><span class="mark"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg></span><span class="wm"><b>两清</b><small>LIANGQING</small></span></a>
+    <div class="head-r"><small id="me-line" hidden><span id="me-name"></span><button class="link" id="logout" type="button">换人</button></small></div>
+  </header>
+  <p class="tagline">两个人，一本明白账</p>
+  <div class="intro"><span class="eyebrow">A LITTLE CLARITY, EVERY DAY</span><h2>我们的往来账本<span>.</span></h2><p>把账记清，把朋友留住。</p></div>
+  <div id="notice" class="notice" hidden></div>
+
+  <!-- 未配置 Firebase -->
+  <section id="setup" class="card" hidden>
+    <h2>还差一步：连上数据库</h2>
+    <p>这个网页还没有填 Firebase 配置。打开 index.html，找到开头写着「第一步」的地方，把 Firebase 给你的 firebaseConfig 整段粘贴进去，保存后重新上传。</p>
+  </section>
+
+  <!-- 首页：新建账本 -->
+  <section id="home" class="wrap" hidden>
+    <form class="card" id="create" novalidate>
+      <h2>新建一本两人账</h2>
+      <p>建好后把链接发给朋友。每一笔账都要两个人各自点「同意」才会计入。</p>
+      <div class="row">
+        <div class="field"><label for="c-name">你的称呼</label><input id="c-name" maxlength="20" placeholder="比如：小吴" autocomplete="nickname"></div>
+        <div class="field"><label for="c-pin">设一个 PIN（4–6 位数字）</label><input id="c-pin" class="pin" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="••••"></div>
+      </div>
+      <p>PIN 用来在换手机或清了浏览器以后找回你的身份，也防止别人冒充你点同意。</p>
+      <div class="err" id="c-err" hidden></div>
+      <div class="actions"><button class="btn primary big" type="submit" id="c-go"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>开启账本</button></div>
+    </form>
+    <div class="card" id="recent-card" hidden>
+      <h2>我的账本</h2>
+      <div class="recent" id="recent"></div>
+    </div>
+  </section>
+
+  <!-- 选身份 / 加入 -->
+  <section id="whoami" class="card" hidden>
+    <h2 id="w-title">你是谁？</h2>
+    <div class="people" id="w-people"></div>
+    <form id="w-form" class="wrap" style="gap:12px" hidden novalidate>
+      <div class="row">
+        <div class="field" id="w-name-f"><label for="w-name">你的称呼</label><input id="w-name" maxlength="20" placeholder="比如：小李" autocomplete="nickname"></div>
+        <div class="field"><label for="w-pin" id="w-pin-l">PIN</label><input id="w-pin" class="pin" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="••••"></div>
+      </div>
+      <div class="err" id="w-err" hidden></div>
+      <div class="actions"><button class="btn" type="button" id="w-cancel">取消</button><button class="btn primary" type="submit" id="w-go">确认</button></div>
+    </form>
+  </section>
+
+  <section class="promise" id="promise" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg><h3>每一笔，都有共识</h3><p>双方确认才入账。<br>让钱算得清，让相处轻松。</p>
+    <div class="pair"><span class="avs"><span class="av me">我</span><span class="av you">你</span></span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 7 17l-5-5"/><path d="m22 10-7.5 7.5L13 16"/></svg>双向确认</div></section>
+
+  <!-- 主界面 -->
+  <section id="invite" class="card" hidden>
+    <h2>把链接发给朋友</h2>
+    <p>对方打开后填上名字和自己的 PIN 就加入了，不需要注册任何账号。</p>
+    <div class="copybox"><input id="inv-url" readonly><button class="btn primary" type="button" id="inv-copy">复制</button></div>
+  </section>
+
+  <section id="bal" class="bal" hidden>
+    <svg class="deco" viewBox="0 0 210 190" aria-hidden="true"><rect x="20" y="12" width="128" height="128" rx="26" transform="rotate(-18 84 76)"/><rect x="62" y="42" width="128" height="128" rx="26" transform="rotate(-18 126 106)"/><path d="M98 142 146 64M112 62h36v36"/></svg>
+    <div class="bal-head"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg>当前净余额</div>
+    <div class="bal-line" id="bal-line"></div>
+    <div class="bal-amt"><span class="cur" id="bal-cur">$</span><span class="n" id="bal-amt">0.00</span><span class="code" id="bal-code">USD</span></div>
+    <div class="bal-count" id="bal-count"></div>
+    <div class="bal-meta"><span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>双方确认 · 自动抵扣</span><button class="on-hero" id="settle" type="button" hidden>记还款<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></button></div>
+  </section>
+  <div class="rule" id="rule" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><div><b>先确认，再入账</b><span>待确认的金额不会影响你们的余额</span></div></div>
+
+  <form id="compose" class="card" hidden novalidate>
+    <h2 id="f-title">记一笔</h2>
+    <div class="field"><span class="lbl">谁付的钱</span>
+      <div class="seg" id="f-payer"><button type="button" data-m="m1"></button><button type="button" data-m="m2"></button></div>
+    </div>
+    <div class="row">
+      <div class="field"><label for="f-date">日期</label><input id="f-date" type="date"></div>
+      <div class="field"><label for="f-amount">金额</label><input id="f-amount" inputmode="decimal" autocomplete="off" placeholder="0.00"></div>
+    </div>
+    <div class="field"><label for="f-note">地点 / 原因</label><input id="f-note" maxlength="60" placeholder="比如：KFC"></div>
+    <div class="field"><span class="lbl">怎么算</span>
+      <div class="seg" id="f-split"><button type="button" data-split="full">对方全额承担</button><button type="button" data-split="half">两人 AA</button></div>
+    </div>
+    <div class="preview" id="f-preview"></div>
+    <div class="err" id="f-err" hidden></div>
+    <div class="actions"><button class="btn" type="button" id="f-cancel" hidden>取消修改</button><button class="btn primary" type="submit" id="f-submit">提交，等对方确认</button></div>
+  </form>
+
+  <section id="ledger" class="wrap" style="gap:10px" hidden>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="list" id="list"></div>
+  </section>
+
+  <footer class="foot" id="foot" hidden>
+    <div class="r"><label for="cur">货币符号</label><select id="cur"><option>$</option><option>¥</option><option>€</option><option>£</option></select>
+      <button class="btn ghost" type="button" id="foot-copy"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>邀请朋友</button></div>
+    <div>点「邀请朋友」会复制账本链接。链接就是钥匙：拿到链接的人能看到这本账。只发给你的朋友。</div>
+  </footer>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+/* ====== 第一步：把 Firebase 控制台给你的 firebaseConfig 整段粘贴，替换下面这一段 ====== */
+const firebaseConfig = {
+  apiKey: "AIzaSyBIokoXK9eHsUzXCZXxWD4MfTxZl8OYtE8",
+  authDomain: "shared-ledger-for-two.firebaseapp.com",
+  projectId: "shared-ledger-for-two",
+  storageBucket: "shared-ledger-for-two.firebasestorage.app",
+  messagingSenderId: "794914698263",
+  appId: "1:794914698263:web:d9fb984b02b623f84e5852",
+  measurementId: "G-6MF835Z1Y2"
+};
+/* ====== 粘贴到此为止，下面的内容不用改 ====== */
+
+(function(){
+const $=id=>document.getElementById(id);
+const OTHER={m1:'m2',m2:'m1'};
+const S={editing:null,id:null,L:null,Lloaded:false,entries:[],eLoaded:false,me:null,tab:null,payer:null,split:'full',armed:null,busy:false,whoMode:null,unsub:[]};
+
+/* ---------- helpers ---------- */
+function h(tag,attrs,...kids){const el=document.createElement(tag);
+  for(const k in attrs||{}){const v=attrs[k];if(v==null||v===false)continue;
+    if(k==='class')el.className=v;else if(k.startsWith('on'))el.addEventListener(k.slice(2),v);else el.setAttribute(k,v===true?'':v)}
+  for(const c of kids.flat()){if(c==null||c===false)continue;el.append(c.nodeType?c:document.createTextNode(String(c)))}
+  return el}
+const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+let toastT;function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,3200)}
+function notice(node){const n=$('notice');if(!node){n.hidden=true;return}n.textContent='';n.append(node);n.hidden=false}
+function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function newId(){const a=new Uint8Array(15);crypto.getRandomValues(a);const c='abcdefghijkmnpqrstuvwxyz23456789';return Array.from(a,x=>c[x%32]).join('')}
+async function hashPin(id,pin){const txt=id+':'+pin;
+  if(window.crypto&&crypto.subtle){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(txt));return Array.from(new Uint8Array(b),x=>x.toString(16).padStart(2,'0')).join('')}
+  let h1=0x811c9dc5;for(const ch of txt){h1^=ch.charCodeAt(0);h1=Math.imul(h1,16777619)>>>0}return 'f'+h1.toString(16)}
+const pinOk=p=>/^\d{4,6}$/.test(p);
+function ledgerUrl(id){return location.origin+location.pathname+'?b='+id}
+async function copy(text){try{await navigator.clipboard.writeText(text);toast('已复制')}catch(e){$('inv-url').select();toast('请手动复制链接')}}
+function errMsg(e){const c=e&&e.code||'';
+  if(c==='permission-denied')return '没有权限。请检查 Firebase 里的数据库规则是否已经发布。';
+  if(c==='unavailable')return '连不上数据库，请检查网络。';
+  if(c==='not-found')return '找不到这条记录，可能已被删除。';
+  return '操作失败（'+(c||'未知错误')+'），请再试一次。'}
+
+/* ---------- config / boot ---------- */
+const configured=!!(firebaseConfig&&firebaseConfig.projectId);
+let db=null;
+if(configured){firebase.initializeApp(firebaseConfig);db=firebase.firestore()}
+$('f-date').value=today();
+
+function show(view){for(const v of['setup','home','whoami','promise','invite','bal','rule','compose','ledger','foot'])$(v).hidden=true;
+  for(const v of view)$(v).hidden=false}
+
+function boot(){
+  if(!configured){show(['setup']);return}
+  S.id=new URLSearchParams(location.search).get('b');
+  if(!S.id||!/^[a-z0-9]{10,40}$/.test(S.id)){S.id=null;renderHome();return}
+  S.me=(ls.get('ledger-me')||{})[S.id]||null;
+  try{S.tab=ls.get('ledger-tab')}catch(e){}
+  const ref=db.collection('ledgers').doc(S.id);
+  const slow=setTimeout(()=>{if(!S.Lloaded)notice(h('span',null,h('b',null,'还没连上数据库。'),'请检查网络，数据到了会自动显示。'))},10000);
+  S.unsub.push(ref.onSnapshot(s=>{clearTimeout(slow);S.Lloaded=true;S.L=s.exists?s.data():null;render()},e=>{clearTimeout(slow);notice(h('span',null,h('b',null,'读不到账本。'),errMsg(e)))}));
+  S.unsub.push(ref.collection('entries').onSnapshot(q=>{S.eLoaded=true;S.entries=q.docs.map(d=>Object.assign({id:d.id},d.data()));render()},e=>notice(h('span',null,h('b',null,'读不到账目。'),errMsg(e)))));
+}
+
+/* ---------- home ---------- */
+function renderHome(){show(['home','promise']);$('me-line').hidden=true;
+  const list=ls.get('ledger-recent')||[];const box=$('recent');box.textContent='';
+  $('recent-card').hidden=!list.length;
+  for(const r of list)box.append(h('a',{href:'?b='+r.id},h('b',null,r.label||'未命名账本'),h('span',null,r.seen?('上次打开 '+r.seen):'')))}
+function remember(){if(!S.L)return;const m=S.L.members||{};
+  const label=[m.m1&&m.m1.name,m.m2&&m.m2.name].filter(Boolean).join(' 和 ');
+  const list=(ls.get('ledger-recent')||[]).filter(r=>r.id!==S.id);
+  list.unshift({id:S.id,label,seen:today()});ls.set('ledger-recent',list.slice(0,10))}
+function setMe(m){const all=ls.get('ledger-me')||{};if(m)all[S.id]=m;else delete all[S.id];ls.set('ledger-me',all);S.me=m}
+
+$('create').addEventListener('submit',async ev=>{ev.preventDefault();const err=$('c-err');err.hidden=true;
+  const name=$('c-name').value.trim().slice(0,20),pin=$('c-pin').value.trim();
+  if(!name){err.textContent='请填你的称呼。';err.hidden=false;return}
+  if(!pinOk(pin)){err.textContent='PIN 要 4 到 6 位数字。';err.hidden=false;return}
+  $('c-go').disabled=true;
+  try{const id=newId();
+    await db.collection('ledgers').doc(id).set({members:{m1:{name,pinHash:await hashPin(id,pin)}},cur:'$',created:firebase.firestore.FieldValue.serverTimestamp()});
+    const all=ls.get('ledger-me')||{};all[id]='m1';ls.set('ledger-me',all);
+    location.href='?b='+id;
+  }catch(e){err.textContent=errMsg(e);err.hidden=false;$('c-go').disabled=false}});
+
+/* ---------- who am I ---------- */
+function renderWho(){show(['whoami','promise']);$('me-line').hidden=true;
+  const m=S.L.members||{};const box=$('w-people');box.textContent='';
+  const names=['m1','m2'].filter(k=>m[k]);
+  $('w-title').textContent=names.length<2?'加入这本账':'你是谁？';
+  for(const k of names)box.append(h('div',{class:'person'},h('b',null,m[k].name),
+    h('button',{class:'btn',type:'button',onclick:()=>openWho(k)},'我是'+m[k].name)));
+  if(names.length<2)box.append(h('div',{class:'person'},h('span',null,names.length?('和 '+m[names[0]].name+' 一起记账'):'第一个加入'),
+    h('button',{class:'btn primary',type:'button',onclick:()=>openWho('new')},'我是新来的')));
+  if(!S.whoMode)$('w-form').hidden=true}
+function openWho(mode){S.whoMode=mode;$('w-form').hidden=false;$('w-err').hidden=true;$('w-pin').value='';
+  const isNew=mode==='new';$('w-name-f').hidden=!isNew;
+  $('w-pin-l').textContent=isNew?'设一个 PIN（4–6 位数字）':'输入 '+S.L.members[mode].name+' 的 PIN';
+  $('w-go').textContent=isNew?'加入':'确认';(isNew?$('w-name'):$('w-pin')).focus()}
+$('w-cancel').addEventListener('click',()=>{S.whoMode=null;$('w-form').hidden=true});
+$('w-form').addEventListener('submit',async ev=>{ev.preventDefault();const err=$('w-err');err.hidden=true;
+  const pin=$('w-pin').value.trim();const fail=t=>{err.textContent=t;err.hidden=false};
+  if(!pinOk(pin))return fail('PIN 要 4 到 6 位数字。');
+  const hp=await hashPin(S.id,pin);
+  if(S.whoMode!=='new'){const mm=S.L.members[S.whoMode];
+    if(!mm||mm.pinHash!==hp)return fail('PIN 不对。');
+    setMe(S.whoMode);S.whoMode=null;render();return}
+  const name=$('w-name').value.trim().slice(0,20);if(!name)return fail('请填你的称呼。');
+  $('w-go').disabled=true;
+  try{const ref=db.collection('ledgers').doc(S.id);let slot=null;
+    await db.runTransaction(async t=>{const s=await t.get(ref);const m=(s.data()||{}).members||{};
+      slot=!m.m1?'m1':!m.m2?'m2':null;if(!slot)return;
+      t.update(ref,{['members.'+slot]:{name,pinHash:hp}})});
+    if(!slot)fail('这本账已经有两个人了。');else{setMe(slot);S.whoMode=null;toast('加入成功');render()}
+  }catch(e){fail(errMsg(e))}finally{$('w-go').disabled=false}});
+$('logout').addEventListener('click',()=>{setMe(null);S.whoMode=null;render()});
+
+/* ---------- model ---------- */
+const mem=k=>(S.L&&S.L.members||{})[k];
+function nameOf(k){const m=mem(k);if(m&&m.name)return m.name;return k===S.me?'你':'对方'}
+const who=k=>k===S.me?'你':nameOf(k);
+const cur=()=>(S.L&&S.L.cur)||'$';
+const CODES={'$':'USD','¥':'CNY','€':'EUR','£':'GBP'};
+function num(c){return (Math.abs(c)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function fmt(c){return cur()+num(c)}
+const owed=e=>e.split==='half'?e.cents/2:e.cents;
+function statusOf(e){const v=e.votes||{};const a=v.m1,b=v.m2;
+  if(a==='no'||b==='no')return {st:'rejected',v};
+  if(a==='void'&&b==='void')return {st:'voided',v};
+  const ok=x=>x==='yes'||x==='void';
+  if(ok(a)&&ok(b))return {st:'confirmed',v,voidReq:a==='void'?'m1':b==='void'?'m2':null};
+  return {st:'pending',v}}
+function needsMe(e,s){if(s.st==='pending')return s.v[S.me]!=='yes';
+  if(s.st!=='confirmed')return false;
+  return !!(e.edit&&e.edit.by!==S.me)||!!(s.voidReq&&s.voidReq!==S.me)}
+
+/* ---------- main render ---------- */
+function render(){
+  if(!S.id)return;
+  if(!S.Lloaded)return;
+  if(!S.L){show([]);notice(h('span',null,h('b',null,'找不到这本账。'),'链接可能不完整，请让对方重新复制发给你。'));return}
+  remember();
+  if(!S.me||!mem(S.me)){if(S.me)setMe(null);notice(null);renderWho();return}
+  notice(null);
+  const o=OTHER[S.me];const hasOther=!!mem(o);
+  $('me-line').hidden=false;$('me-name').textContent=nameOf(S.me);
+  show(['bal','rule','compose','ledger','foot'].concat(hasOther?[]:['invite']));
+  $('inv-url').value=ledgerUrl(S.id);
+  $('cur').value=cur();
+  if(!S.eLoaded){$('bal-line').textContent='正在读取账目…';$('bal-amt').textContent='—';$('bal-cur').textContent=cur();return}
+  // balance (positive: m2 owes m1)
+  let net=0,nConf=0,nPend=0;const st={};
+  for(const e of S.entries){const s=statusOf(e);st[e.id]=s;
+    if(s.st==='confirmed'){nConf++;net+=(e.payer==='m1'?1:-1)*owed(e)}else if(s.st==='pending')nPend++}
+  const line=$('bal-line');line.textContent='';
+  $('bal-cur').textContent=cur();$('bal-code').textContent=CODES[cur()]||'';$('bal-amt').textContent=num(net);
+  if(Math.abs(net)<0.5)line.append('目前两清，轻轻松松');
+  else{const cred=net>0?'m1':'m2';line.append(h('span',{class:'who'},who(OTHER[cred])),' 欠 ',h('span',{class:'who'},who(cred)))}
+  $('bal-count').textContent='已入账 '+nConf+' 笔'+(nPend?' · 待确认 '+nPend+' 笔':'');
+  $('settle').hidden=!(hasOther&&Math.abs(net)>=0.5);$('settle').dataset.net=net;
+  // form
+  if(!S.payer)S.payer=S.me;
+  for(const b of $('f-payer').children){const k=b.dataset.m;b.textContent=k===S.me?'我付的':(nameOf(k)+' 付的');b.setAttribute('aria-pressed',String(S.payer===k))}
+  for(const b of $('f-split').children)b.setAttribute('aria-pressed',String(S.split===b.dataset.split));
+  if(S.editing&&!S.entries.some(e=>e.id===S.editing.id))S.editing=null;
+  $('f-title').textContent=S.editing?'修改这一笔':'记一笔';
+  $('f-submit').textContent=S.editing?'提交修改，等对方确认':'提交，等对方确认';
+  $('f-cancel').hidden=!S.editing;
+  updatePreview();
+  renderLedger(st);
+}
+
+function renderLedger(st){
+  const pend=S.entries.filter(e=>st[e.id].st==='pending'||(st[e.id].st==='confirmed'&&(st[e.id].voidReq||e.edit)));
+  const conf=S.entries.filter(e=>st[e.id].st==='confirmed');
+  const need=S.entries.filter(e=>needsMe(e,st[e.id])).length;
+  if(!S.tab)S.tab=need?'pending':'book';
+  const tw=$('tabs');tw.textContent='';
+  for(const [k,label,n,dot] of [['pending','待确认',pend.length,need>0],['book','账单',conf.length],['all','全部',S.entries.length]])
+    tw.append(h('button',{class:'tab',role:'tab',type:'button','aria-selected':String(S.tab===k),onclick:()=>{S.tab=k;ls.set('ledger-tab',k);render()}},
+      label,h('span',{class:'ct'},n),dot?h('span',{class:'dot',title:'有需要你处理的'}):null));
+  const rows=(S.tab==='pending'?pend:S.tab==='book'?conf:S.entries).slice()
+    .sort((x,y)=>(y.date||'').localeCompare(x.date||'')||(y.at||'').localeCompare(x.at||''));
+  const list=$('list');list.textContent='';
+  if(!rows.length){list.append(h('div',{class:'empty'},S.tab==='pending'?'没有等待确认的账。':S.tab==='book'?'还没有入账的记录。在上面记第一笔，对方同意后就会出现在这里。':'还没有任何记录。'));return}
+  let lastM=null;
+  for(const e of rows){const m=(e.date||'').slice(0,7);
+    if(S.tab!=='pending'&&m!==lastM){lastM=m;let sum=0;
+      for(const x of rows)if((x.date||'').slice(0,7)===m&&st[x.id].st==='confirmed')sum+=x.cents;
+      const [yy,mm]=m.split('-');list.append(h('div',{class:'month'},yy+' 年 '+Number(mm)+' 月',h('span',null,'流水 '+fmt(sum))))}
+    list.append(renderItem(e,st[e.id]))}
+}
+
+function chip(k,v){const n=who(k);
+  if(v==='yes')return h('span',{class:'chip yes'},'✓ '+n);
+  if(v==='no')return h('span',{class:'chip no'},'✕ '+n+' 拒绝');
+  if(v==='void')return h('span',{class:'chip void'},'⊘ '+n+' 要作废');
+  return h('span',{class:'chip wait'},'… '+n+(mem(k)?'':'（还没加入）'))}
+
+function descOf(x){return who(x.payer)+' 付了 '+fmt(x.cents)+(x.split==='half'?' · AA，':' · ')+who(OTHER[x.payer])+' 欠 '+fmt(owed(x))}
+function renderItem(e,s){
+  const dead=s.st==='rejected'||s.st==='voided';
+  const ed=s.st==='confirmed'?e.edit:null;
+  const el=h('div',{class:'item'+(dead?' dead':'')},
+    h('div',{class:'i-top'},h('span',{class:'i-date'},(e.date||'').slice(5).replace('-','/')),h('span',{class:'i-note'},e.note||'（没写原因）'),h('span',{class:'i-amt'},fmt(owed(e)))),
+    h('div',{class:'i-sub'},descOf(e)),
+    h('div',{class:'i-sub'},chip('m1',s.v.m1),chip('m2',s.v.m2),
+      s.st==='confirmed'&&!s.voidReq?(ed?'修改待确认，暂按原金额计算':'已入账'):null,s.st==='voided'?'已作废，不计入':null,s.st==='rejected'?'未入账':null));
+  if(ed)el.append(h('div',{class:'i-edit'},h('b',null,'✎ '+who(ed.by)+' 想改成'),
+    (ed.date||'').slice(5).replace('-','/')+' · '+(ed.note||'（没写原因）')+' · '+descOf(ed)));
+  const mine=s.v[S.me],o=OTHER[S.me],acts=[];
+  const editBtn=label=>h('button',{class:'btn',type:'button',onclick:()=>startEdit(e)},label||'修改');
+  if(s.st==='pending'){
+    if(mine!=='yes')acts.push(h('span',{class:'hint'},'等你确认'),
+      h('button',{class:'btn primary',type:'button',onclick:()=>vote(e.id,'yes')},'同意'),
+      h('button',{class:'btn',type:'button',onclick:()=>vote(e.id,'no')},'拒绝'),editBtn());
+    else{acts.push(editBtn());if(e.by===S.me)acts.push(armBtn('del:'+e.id,'撤回',()=>delEntry(e.id)))}
+  }else if(s.st==='rejected'){
+    acts.push(editBtn('修改后重新提交'));
+    if(mine==='no')acts.push(h('button',{class:'btn',type:'button',onclick:()=>vote(e.id,'yes')},'改为同意'));
+    acts.push(armBtn('del:'+e.id,'删除',()=>delEntry(e.id)));
+  }else if(s.st==='confirmed'){
+    if(ed){
+      if(ed.by===S.me)acts.push(h('span',{class:'hint'},'等 '+who(o)+' 同意修改'),
+        h('button',{class:'btn',type:'button',onclick:()=>dropEdit(e.id)},'撤回修改'));
+      else acts.push(h('span',{class:'hint'},who(ed.by)+' 想修改这笔'),
+        h('button',{class:'btn primary',type:'button',onclick:()=>applyEdit(e)},'同意修改'),
+        h('button',{class:'btn',type:'button',onclick:()=>dropEdit(e.id)},'不同意'));
+    }else if(s.voidReq===o&&mine==='yes')acts.push(h('span',{class:'hint'},who(o)+' 想作废这笔'),
+      h('button',{class:'btn primary',type:'button',onclick:()=>vote(e.id,'void')},'同意作废'));
+    else if(mine==='void')acts.push(h('span',{class:'hint'},'等 '+who(o)+' 同意作废'),
+      h('button',{class:'btn',type:'button',onclick:()=>vote(e.id,'yes')},'取消申请'));
+    else acts.push(editBtn(),armBtn('void:'+e.id,'申请作废',()=>vote(e.id,'void')));
+  }else acts.push(armBtn('del:'+e.id,'删除记录',()=>delEntry(e.id)));
+  if(acts.length)el.append(h('div',{class:'i-act'},acts));
+  return el}
+
+let armT;function armBtn(key,label,fn){
+  const b=h('button',{class:'btn '+(S.armed===key?'armed':'danger'),type:'button'},S.armed===key?'再点一次确认':label);
+  b.addEventListener('click',()=>{clearTimeout(armT);if(S.armed===key){S.armed=null;fn()}else{S.armed=key;armT=setTimeout(()=>{S.armed=null;render()},4000)}render()});
+  return b}
+
+/* ---------- form ---------- */
+function parseCents(){const raw=$('f-amount').value.replace(/[,，\s$¥€£]/g,'');if(!/^\d+(\.\d{0,2})?$/.test(raw))return null;
+  const c=Math.round(parseFloat(raw)*100);return c>0&&c<1e10?c:null}
+function updatePreview(){if(!S.me)return;const c=parseCents(),pv=$('f-preview');pv.textContent='';
+  const o=h('b',null,who(OTHER[S.me]));const ed=S.editing;
+  const res=c?h('b',null,who(OTHER[S.payer])+' 欠 '+who(S.payer)+' '+fmt(S.split==='half'?c/2:c)):null;
+  if(ed&&ed.confirmed){pv.append('提交后要等 ',o,' 同意修改，同意前仍按原来的金额计算。',res?'改好后记为：':'',res||'');return}
+  if(ed){pv.append('修改后要等 ',o,' 重新确认。',res?'入账后记为：':'',res||'');return}
+  if(!c){pv.append('提交后要等 ',o,' 同意才会入账。');return}
+  pv.append('提交后要等 ',o,' 同意。入账后记为：',res)}
+function startEdit(e){const st=statusOf(e).st;S.editing={id:e.id,confirmed:st==='confirmed'};
+  $('f-date').value=e.date||today();$('f-amount').value=(e.cents/100).toFixed(2);$('f-note').value=e.note||'';
+  S.payer=e.payer;S.split=e.split||'full';$('f-err').hidden=true;
+  render();$('compose').scrollIntoView({behavior:'smooth',block:'start'});$('f-amount').focus()}
+function endEdit(){S.editing=null;$('f-amount').value='';$('f-note').value='';$('f-date').value=today();S.payer=S.me;S.split='full';render()}
+$('f-cancel').addEventListener('click',endEdit);
+$('f-payer').addEventListener('click',e=>{const b=e.target.closest('button');if(b){S.payer=b.dataset.m;render()}});
+$('f-split').addEventListener('click',e=>{const b=e.target.closest('button');if(b){S.split=b.dataset.split;render()}});
+$('f-amount').addEventListener('input',updatePreview);
+$('compose').addEventListener('submit',async ev=>{ev.preventDefault();if(S.busy)return;
+  const err=$('f-err');err.hidden=true;const fail=t=>{err.textContent=t;err.hidden=false};
+  const cents=parseCents(),date=$('f-date').value,note=$('f-note').value.trim().slice(0,60);
+  if(!cents){fail('请填一个大于 0 的金额，最多两位小数。');$('f-amount').focus();return}
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date))return fail('请选择日期。');
+  S.busy=true;$('f-submit').disabled=true;
+  try{const data={date,payer:S.payer,cents,note,split:S.split};
+    if(S.editing){const ed=S.editing;
+      if(ed.confirmed)await entryRef(ed.id).update({edit:Object.assign({by:S.me},data)});
+      else await entryRef(ed.id).update(Object.assign({},data,{votes:{[S.me]:'yes'}}));
+      toast('修改已提交，等 '+who(OTHER[S.me])+' 确认');S.tab='pending';endEdit();
+    }else{
+      await db.collection('ledgers').doc(S.id).collection('entries').add(Object.assign({by:S.me,at:new Date().toISOString(),votes:{[S.me]:'yes'}},data));
+      $('f-amount').value='';$('f-note').value='';
+      toast('已提交，等 '+who(OTHER[S.me])+' 确认');S.tab='pending';render()}
+  }catch(e){fail(errMsg(e))}finally{S.busy=false;$('f-submit').disabled=false}});
+$('settle').addEventListener('click',()=>{const net=Number($('settle').dataset.net);S.editing=null;
+  S.payer=net>0?'m2':'m1';S.split='full';$('f-amount').value=(Math.abs(net)/100).toFixed(2);$('f-note').value='还款';$('f-date').value=today();
+  render();$('compose').scrollIntoView({behavior:'smooth',block:'start'});$('f-amount').focus()});
+
+/* ---------- writes ---------- */
+const entryRef=id=>db.collection('ledgers').doc(S.id).collection('entries').doc(id);
+async function vote(id,val){try{await entryRef(id).update({['votes.'+S.me]:val})}catch(e){toast(errMsg(e))}}
+async function applyEdit(e){const x=e.edit;try{await entryRef(e.id).update({date:x.date,payer:x.payer,cents:x.cents,note:x.note,split:x.split,edit:firebase.firestore.FieldValue.delete()});toast('已同意修改')}catch(err){toast(errMsg(err))}}
+async function dropEdit(id){try{await entryRef(id).update({edit:firebase.firestore.FieldValue.delete()})}catch(e){toast(errMsg(e))}}
+async function delEntry(id){try{await entryRef(id).delete()}catch(e){toast(errMsg(e))}}
+$('cur').addEventListener('change',async()=>{try{await db.collection('ledgers').doc(S.id).update({cur:$('cur').value})}catch(e){toast(errMsg(e))}});
+$('inv-copy').addEventListener('click',()=>copy(ledgerUrl(S.id)));
+$('foot-copy').addEventListener('click',()=>copy(ledgerUrl(S.id)));
+
+boot();
+})();
+</script>
+</body>
+</html>
